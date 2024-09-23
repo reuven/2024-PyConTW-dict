@@ -1,29 +1,36 @@
+#!/usr/bin/env python3
 
-NUM = 3571
+# this is a "hash" #
+# this is a "bang" !
+# together, this is known as as "shebang" line
+
 def getnum(input):
     val = 0
     if isinstance(input, (int, float)):
         val = input
     elif isinstance(input, str):
         ops = 0
-        for char in input:
-            val += ord(char) * (10 ** ops)
+        for index, char in enumerate(input, 1):
+            val += ord(char) * index
             ops += 1
+    else:
+        raise TypeError(f'Unhashable value: {input}')
+
     return val
-    
-def ex1(key):
+
+def myhash(key):
     val = 0
     if isinstance(key, tuple):
         val = sum(getnum(item) for item in key)
     else:
         val = getnum(key)
-    return val % NUM
-    
+    return val
+
 def main():
-    print(ex1(1))
-    print(ex1('abc'))
-    print(ex1('cba'))
-    print(ex1(('a', 1)))
+    print(myhash(1))
+    print(myhash('abc'))
+    print(myhash('cba'))
+    print(myhash(('a', 1)))
 
 if __name__ == "__main__":
     main()

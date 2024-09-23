@@ -15,6 +15,14 @@ class HashTable():
         for key, value in list_of_pairs:
             self.data[myhash(key) % len(self.data)] = (key, value)
 
+    def __getitem__(self, key):
+        # If `None` is there, then raise `KeyError` (just like a real dict)
+        if self.data[myhash(key) % len(self.data)] is None:
+            raise KeyError(f'{key} not found')
+        else:
+            return self.data[myhash(key) % len(self.data)][1]
+
+
 def getnum(input):
     val = 0
     if isinstance(input, int):
@@ -43,6 +51,7 @@ def main():
     pairs = [('a', 10), ('b', 20), ('c', 30), ('hello out there', 40)]
     ret = HashTable(pairs)
     print(ret.data)   # this should show our key-value pairs, but hashed
+    print(ret['a'])    # this should show 10
 
 if __name__ == "__main__":
     main()

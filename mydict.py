@@ -6,8 +6,10 @@
 
 def getnum(input):
     val = 0
-    if isinstance(input, (int, float)):
-        val = input
+    if isinstance(input, int):
+        val = int
+    elif isinstance(input, float):
+        val = getnum(str(float)) * 10    # treat a float as a string, more or less
     elif isinstance(input, str):
         ops = 0
         for index, char in enumerate(input, 1):

@@ -13,14 +13,24 @@ class HashTable():
         # (3) Place the (key, value) tuple in that location in our list
 
         for key, value in list_of_pairs:
-            self.data[myhash(key) % len(self.data)] = (key, value)
+            self.__setitem__(key, value)
 
     def __getitem__(self, key):
-        # If `None` is there, then raise `KeyError` (just like a real dict)
-        if self.data[myhash(key) % len(self.data)] is None:
-            raise KeyError(f'{key} not found')
-        else:
-            return self.data[myhash(key) % len(self.data)][1]
+        idx = myhash(key) % len(self.data)
+        while idx < len(self.data):
+            # If `None` is there, then raise `KeyError` (just like a real dict)
+            if self.data[idx] is None:
+                raise KeyError(f'{key} not found')
+            elif self.data[idx][0] == key:
+                return self.data[myhash(key) % len(self.data)][1]
+            else:
+                idx += 1
+            
+    def __setitem__(self, key, value):
+        idx = myhash(key) % len(self.data)
+        while self.data[idx] is not None and key != self.data[idx][0]:
+            idx = (idx + 1) % len(self.data)
+        self.data[idx] = (key, value)
 
 
 def getnum(input):

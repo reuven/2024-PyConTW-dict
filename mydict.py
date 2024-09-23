@@ -34,6 +34,29 @@ class HashTable():
         while self.data[idx] is not None and key != self.data[idx][0]:
             idx = (idx + 1) % len(self.data)
         self.data[idx] = (key, value)
+    
+    def items(self):
+        for one_element in self.data:
+            if one_element is None:
+                continue
+            yield one_element
+    
+    def __iterter__(self):
+        for one_element in self.data:
+            if one_element is None:
+                continue
+            yield one_element
+
+    # remove the key-value pair with the given key
+    def pop(self, key):
+        idx = myhash(key) % len(self.data)
+        while self.data[idx] is not None and key != self.data[idx][0]:
+            idx = (idx + 1) % len(self.data)
+        if self.data[idx] is None:
+            return None
+        else:
+            self.data[idx] = None
+            return self.data[idx][1]
 
     def  rehashAndResize(self):
         # double data size
@@ -50,7 +73,6 @@ class HashTable():
             new_data[myhash(key) % len(self.data)] = (key, value)
 
         self.data = new_data
-
 
 def getnum(input):
     val = 0
@@ -83,10 +105,16 @@ def main():
     print(ret['a'])    # this should show 10
     print(ret['b'])
     print(ret['c'])
+    
 
     for one_key in 'defghijkl':
         ret[one_key] = ord(one_key)
 
+    for key, value in ret.items():
+        print(key, value)
+    
+    for key,value in ret:
+        print(key, value)
     print(ret.data)
 
 if __name__ == "__main__":

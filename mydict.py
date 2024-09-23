@@ -27,10 +27,28 @@ class HashTable():
                 idx += 1
             
     def __setitem__(self, key, value):
+        if self.data.count(None)<len(self.data)//3:
+            # None not enough, so rehash and resize
+            self.rehashAndResize()
         idx = myhash(key) % len(self.data)
         while self.data[idx] is not None and key != self.data[idx][0]:
             idx = (idx + 1) % len(self.data)
         self.data[idx] = (key, value)
+        # If `None` is there, then raise `KeyError` (just like a real dict)
+
+        if self.data[myhash(key) % len(self.data)] is None:
+            raise KeyError(f'{key} not found')
+        else:
+            return self.data[myhash(key) % len(self.data)][1]
+        
+    def  rehashAndResize(self):
+        # double data size
+        # need keep the original data and rehash
+        self.data = self.data + [None for _ in range(len(self.data))]
+        for key, value in self.data:
+            if key is None:
+                continue
+            self.data[myhash(key) % len(self.data)] = (key, value)
 
 
 def getnum(input):

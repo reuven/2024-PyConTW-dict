@@ -13,7 +13,7 @@ class HashTable():
         # (3) Place the (key, value) tuple in that location in our list
 
         for key, value in list_of_pairs:
-            self.__setitem__(key, value)
+            self[key] = value
 
     def __getitem__(self, key):
         idx = myhash(key) % len(self.data)
@@ -24,8 +24,8 @@ class HashTable():
             elif self.data[idx][0] == key:
                 return self.data[myhash(key) % len(self.data)][1]
             else:
-                idx += 1
-            
+                idx = (idx + 1) % len(self.data)
+
     def __setitem__(self, key, value):
         if self.data.count(None)<len(self.data)//3:
             # None not enough, so rehash and resize
@@ -34,21 +34,22 @@ class HashTable():
         while self.data[idx] is not None and key != self.data[idx][0]:
             idx = (idx + 1) % len(self.data)
         self.data[idx] = (key, value)
-        # If `None` is there, then raise `KeyError` (just like a real dict)
 
-        if self.data[myhash(key) % len(self.data)] is None:
-            raise KeyError(f'{key} not found')
-        else:
-            return self.data[myhash(key) % len(self.data)][1]
-        
     def  rehashAndResize(self):
         # double data size
         # need keep the original data and rehash
-        self.data = self.data + [None for _ in range(len(self.data))]
-        for key, value in self.data:
-            if key is None:
+        print(f'Before, {self.data=}')
+        new_data = [None for _ in range(len(self.data) * 2)]
+        print(f'After, {self.data=}')
+
+        for one_element in self.data:
+            if one_element is None:
                 continue
-            self.data[myhash(key) % len(self.data)] = (key, value)
+
+            key, value = one_element    # we know it's (key, value) and can be unpacked
+            new_data[myhash(key) % len(self.data)] = (key, value)
+
+        self.data = new_data
 
 
 def getnum(input):
@@ -80,6 +81,13 @@ def main():
     ret = HashTable(pairs)
     print(ret.data)   # this should show our key-value pairs, but hashed
     print(ret['a'])    # this should show 10
+    print(ret['b'])
+    print(ret['c'])
+
+    for one_key in 'defghijkl':
+        ret[one_key] = ord(one_key)
+
+    print(ret.data)
 
 if __name__ == "__main__":
     main()

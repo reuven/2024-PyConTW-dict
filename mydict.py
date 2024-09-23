@@ -4,17 +4,21 @@
 # this is a "bang" !
 # together, this is known as as "shebang" line
 
+class HashTable():
+    def __init__(self, mylist):
+        self.data = [None for _ in range(8)]
+        for key, keyhash in mylist:
+            self.data[keyhash % len(self.data)] = key
+    
 def getnum(input):
     val = 0
     if isinstance(input, int):
-        val = int
+        val = input
     elif isinstance(input, float):
         val = getnum(str(float)) * 10    # treat a float as a string, more or less
     elif isinstance(input, str):
-        ops = 0
         for index, char in enumerate(input, 1):
             val += ord(char) * index
-            ops += 1
     else:
         raise TypeError(f'Unhashable value: {input}')
 
@@ -29,10 +33,9 @@ def myhash(key):
     return val
 
 def main():
-    print(myhash(1))
-    print(myhash('abc'))
-    print(myhash('cba'))
-    print(myhash(('a', 1)))
+    tests = [1, '1', 'abc', ('a', 1)]
+    val = [(item, myhash(item)) for item in tests]
+    ret = HashTable(val)
 
 if __name__ == "__main__":
     main()

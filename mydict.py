@@ -17,6 +17,7 @@ class HashTable():
 
     def __getitem__(self, key):
         idx = myhash(key) % len(self.data)
+        steps = 1
         while idx < len(self.data):
             # If `None` is there, then raise `KeyError` (just like a real dict)
             if self.data[idx] is None:
@@ -24,7 +25,8 @@ class HashTable():
             elif self.data[idx][0] == key:
                 return self.data[myhash(key) % len(self.data)][1]
             else:
-                idx = (idx + 1) % len(self.data)
+                idx = (idx + steps ** 2) % len(self.data)
+                steps += 1
 
     def __setitem__(self, key, value):
         if self.data.count(None)<len(self.data)//3:
@@ -67,8 +69,10 @@ class HashTable():
     def pop(self, key):
 
         idx = myhash(key) % len(self.data)
+        steps = 1
         while self.data[idx] is not None and key != self.data[idx][0]:
-            idx = (idx + 1) % len(self.data)
+            idx = (idx + steps ** 2) % len(self.data)
+            steps += 1
 
         if self.data[idx] is None:
             raise KeyError(f'Key {key} is not found')

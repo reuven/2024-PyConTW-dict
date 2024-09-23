@@ -28,9 +28,7 @@ class HashTable():
             
     def __setitem__(self, key, value):
         idx = myhash(key) % len(self.data)
-        while self.data[idx] is not None:
-            if key == self.data[idx]:
-                break
+        while self.data[idx] is not None and key != self.data[idx][0]:
             idx = (idx + 1) % len(self.data)
         self.data[idx] = (key, value)
 

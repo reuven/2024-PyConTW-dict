@@ -28,20 +28,36 @@ class HashTable():
 
     def __setitem__(self, key, value):
         if self.data.count(None)<len(self.data)//3:
+            print(f'\tRehashing!')
             # None not enough, so rehash and resize
+            # print(f'\tBefore rehashing, size is {len(self)=}')
             self.rehashAndResize()
-        idx = myhash(key) % len(self.data)
-        while self.data[idx] is not None and key != self.data[idx][0]:
-            idx = (idx + 1) % len(self.data)
-        self.data[idx] = (key, value)
-    
+            # print(f'\tAfter rehashing, size is {len(self)=}')
+
+        self.place_pair_safely(self.data, key, value)
+
+    @staticmethod
+    def place_pair_safely(list_of_pairs, key, value):
+        idx = myhash(key) % len(list_of_pairs)
+        while list_of_pairs[idx] is not None and key != list_of_pairs[idx][0]:
+            idx = (idx + 1) % len(list_of_pairs)
+        list_of_pairs[idx] = (key, value)
+
+        # print(f'\tAdded {key}:{value}')
+
+    def __len__(self):
+        return len([1
+                    for one_item in self.data
+                    if one_item is not None])
+
+
     def items(self):
         for one_element in self.data:
             if one_element is None:
                 continue
             yield one_element
-    
-    def __iterter__(self):
+
+    def __iter__(self):
         for one_element in self.data:
             if one_element is None:
                 continue
@@ -49,28 +65,31 @@ class HashTable():
 
     # remove the key-value pair with the given key
     def pop(self, key):
+
         idx = myhash(key) % len(self.data)
         while self.data[idx] is not None and key != self.data[idx][0]:
             idx = (idx + 1) % len(self.data)
-        if self.data[idx] is None:
-            return None
-        else:
-            self.data[idx] = None
-            return self.data[idx][1]
 
-    def  rehashAndResize(self):
+        if self.data[idx] is None:
+            raise KeyError(f'Key {key} is not found')
+        else:
+            value = self.data[idx][1]
+            self.data[idx] = None
+            return value
+
+    def rehashAndResize(self):
         # double data size
         # need keep the original data and rehash
-        print(f'Before, {self.data=}')
-        new_data = [None for _ in range(len(self.data) * 2)]
-        print(f'After, {self.data=}')
+        # print(f'Before, {self.data=}')
+        new_data = [None] * len(self.data) * 2
+        # print(f'After, {self.data=}')
 
         for one_element in self.data:
             if one_element is None:
                 continue
 
             key, value = one_element    # we know it's (key, value) and can be unpacked
-            new_data[myhash(key) % len(self.data)] = (key, value)
+            self.place_pair_safely(new_data, key, value)
 
         self.data = new_data
 
@@ -105,17 +124,37 @@ def main():
     print(ret['a'])    # this should show 10
     print(ret['b'])
     print(ret['c'])
-    
+
 
     for one_key in 'defghijkl':
         ret[one_key] = ord(one_key)
 
+    print('*' * 60)
+    print(len(ret))
+    print(ret.data)
+    ret['this should show up'] = 'hello'
+    print(len(ret))
+    print(ret.data)
+
+    print('*' * 60)
+
+    print(f'*** Iterating over ret.items()')
     for key, value in ret.items():
         print(key, value)
-    
+
+    print(f'*** Iterating over ret')
     for key,value in ret:
         print(key, value)
-    print(ret.data)
+
+    print(f'*** Trying to pop')
+    print(len(ret))
+    print(ret.pop('a'))
+    print(len(ret))
+
+    # print(f'*** Trying to pop')
+    # print(len(ret))
+    # print(ret.pop('not there'))
+    # print(len(ret))
 
 if __name__ == "__main__":
     main()

@@ -1,6 +1,6 @@
 # Notebook and file from "Let's create a dict!"
 
-This repo contains the Jupyter notebook + files from the sprint/workshop that I ran on September 23rd, 2024, at PyCon Taiwan. We built a Python class that implements a lot of the functionality in Python's on builtin `dict` class -- starting with our own (smiple) `myhash` function, and going into more an dmore detail. The final implementation was simliar to how pre-3.6 dicts worked.
+This repo contains the Jupyter notebook + files from the sprint/workshop that I ran on September 23rd, 2024, at PyCon Taiwan. We built a Python class that implements a lot of the functionality in Python's on builtin `dict` class -- starting with our own (simple) `myhash` function, and going into more an dmore detail. The final implementation was simliar to how pre-3.6 dicts worked.
 
 Enjoy!
 
